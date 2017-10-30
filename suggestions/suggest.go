@@ -4,7 +4,6 @@ import (
 	"github.com/lanzay/dadata/models"
 	"github.com/kataras/iris/core/errors"
 	"log"
-	"fmt"
 )
 /*
 Call https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address
@@ -25,17 +24,17 @@ func (daData *DaData) SuggestAddresses(query string, count int) ([]models.Sugges
 }
 
 //Main full adress
-func (daData *DaData) SuggestAddress(query string, count int) (models.SuggestionsAddress, error) {
+func (daData *DaData) SuggestAddress(query string) (models.SuggestionsAddress, error) {
 	
 	x := models.SuggestionsAddress{}
 	
 	res0, err := daData.SuggestAddresses(query, 3)
-	if err != nil {
+	if err != nil || len(res0) == 0 {
 		log.Println(err)
 		return x, errors.New("Adress Error")
 	}
 	
-	fmt.Println("[Unrestricted_value]", res0[0].Unrestricted_value)
+	//fmt.Println("[Unrestricted_value]", res0)
 	res1, err := daData.SuggestAddresses(res0[0].Unrestricted_value, 1)
 	if err != nil {
 		log.Println(err)
